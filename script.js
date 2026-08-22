@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Clique do botão Processar (Interface Web)
+    // Processa e faz o download direto do PDF
     btnProcessar?.addEventListener("click", async () => {
         const filePdf = pdfInput?.files[0];
         const fileExcel = excelInput?.files[0];
@@ -55,62 +55,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error("Erro na resposta do servidor.");
             }
 
+            // Tratamento do PDF como Blob binário para download
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'resultado_processado.pdf'; // nome do arquivo retornado
+            a.download = 'resultado_processado.pdf';
             document.body.appendChild(a);
             a.click();
             a.remove();
             window.URL.revokeObjectURL(url);
 
-            if (tbody) {
-                tbody.innerHTML = ""; // Limpa a tabela antes de preencher
-
-                if (dados.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Nenhum item localizado no PDF.</td></tr>`;
-                    return;
-                }
-
-                let encontrados = 0;
-                dados.forEach(item => {
-                    const tr = document.createElement("tr");
-
-                    const codigoSol = item["CODIGO SOL"] || item["CODIGO_SOL"] || item["CODIGO SOL (CONVERTIDO)"] || "";
-                    const descricao = item["DESCRICAO"] || item["DESCRIÇÃO"] || "";
-
-                    if (!codigoSol) {
-                        tr.classList.add("row-warning");
-                        tr.innerHTML = `
-                            <td>${item["CÓDIGO"] || ""}</td>
-                            <td>
-                                <span class="warning-badge" style="color: #b45309; font-weight: bold;">
-                                    ⚠️ Não encontrado
-                                </span>
-                            </td>
-                            <td>${descricao}</td>
-                        `;
-                    } else {
-                        encontrados++;
-                        tr.innerHTML = `
-                            <td>${item["CÓDIGO"] || ""}</td>
-                            <td class="code-sol" style="color: #2563eb; font-weight: bold;">${codigoSol}</td>
-                            <td>${descricao}</td>
-                        `;
-                    }
-
-                    tbody.appendChild(tr);
-                });
-
-                if (counterText) {
-                    counterText.innerHTML = `Processados <strong>${dados.length} itens</strong> (${encontrados} vinculados)`;
-                }
-            }
-
         } catch (error) {
             console.error("Erro no processamento:", error);
-            alert("Ocorreu um erro ao conectar com o backend. Verifique se o servidor Python está ativo.");
+            alert("Ocorreu um erro ao conectar com o backend. Verifique se a API está online.");
         } finally {
             btnProcessar.innerHTML = textoOriginalBotao;
             btnProcessar.disabled = false;
@@ -122,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.print();
     });
 
-    // Gerar e Injetar Código SOL no PDF Original
+    // Gerar e abrir o PDF alterado em uma nova aba
     btnBaixarPDF?.addEventListener("click", async () => {
         const filePdf = pdfInput?.files[0];
         const fileExcel = excelInput?.files[0];
@@ -151,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
 
-            // Abre o PDF alterado diretamente em uma nova aba
             window.open(url, "_blank");
 
         } catch (err) {
