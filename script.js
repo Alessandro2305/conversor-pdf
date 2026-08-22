@@ -55,7 +55,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error("Erro na resposta do servidor.");
             }
 
-            const dados = await response.json();
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resultado_processado.pdf'; // nome do arquivo retornado
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
 
             if (tbody) {
                 tbody.innerHTML = ""; // Limpa a tabela antes de preencher
