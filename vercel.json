@@ -3,12 +3,24 @@
     {
       "src": "python.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "interface.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "python.py"
+    },
+    {
+      "src": "/escrever-no-pdf-original/",
+      "dest": "python.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "interface.html"
     }
   ]
 }
