@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const dados = await response.json();
-            
+
             if (tbody) {
                 tbody.innerHTML = ""; // Limpa a tabela antes de preencher
 
@@ -133,8 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
         btnBaixarPDF.disabled = true;
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/escrever-no-pdf-original/", {
-                method: "POST",
+            const response = await fetch('/escrever-no-pdf-original/', {
+                method: 'POST',
                 body: formData
             });
 
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
-            
+
             // Abre o PDF alterado diretamente em uma nova aba
             window.open(url, "_blank");
 
