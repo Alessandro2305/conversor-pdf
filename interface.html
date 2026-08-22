@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Conversor PCM</title>
+</head>
+
+<body>
+
+    <div class="container">
+    <header>
+        <h1>Conversor De/Para — CNH x SOL</h1>
+    </header>
+
+    <!-- Área de Drag and Drop -->
+    <div class="upload-container">
+        <div class="drop-card" onclick="document.getElementById('pdfInput').click()">
+            <strong>📄 Selecionar PDF do Sistema</strong>
+            <p>Arraste o arquivo .pdf aqui ou clique para buscar</p>
+            <input type="file" id="pdfInput" accept=".pdf" style="display:none">
+        </div>
+
+        <div class="drop-card" onclick="document.getElementById('excelInput').click()">
+            <strong>📊 Selecionar Planilha De/Para (.xlsx)</strong>
+            <p>Arraste a base de dados em Excel aqui</p>
+            <input type="file" id="excelInput" accept=".xlsx, .xls" style="display:none">
+        </div>
+    </div>
+
+    <!-- Barra de Ações -->
+    <div class="actions-bar">
+        <span>Resultados do Processamento: <strong>3 itens identificados</strong></span>
+        <div>
+            <button class="btn btn-primary">Processar Arquivos</button>
+            <button class="btn btn-success">Exportar para Excel</button>
+        </div>
+    </div>
+
+    <!-- Tabela de Exibição dos Dados -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>CÓDIGO (PDF)</th>
+                    <th>CODIGO SOL (Convertido)</th>
+                    <th>DESCRIÇÃO (De/Para)</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaDados">
+                <tr>
+                    <td>84561324CNH</td>
+                    <td class="highlight-sol">SOL-845613</td>
+                    <td>ANEL DE BORRACHA 55X90X10MM</td>
+                </tr>
+                <tr>
+                    <td>5122846CNH</td>
+                    <td class="highlight-sol">SOL-512284</td>
+                    <td>ROLAMENTO DE ESFERAS 55X9</td>
+                </tr>
+                <tr class="status-warning">
+                    <td>5131232CNH</td>
+                    <td><em>Não encontrado</em></td>
+                    <td>ANEL PLASTICO 90MM</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="script.js"></script>
+</body>
+
+</html>
