@@ -107,7 +107,7 @@ async def escrever_no_pdf_original(
     pdf_file: UploadFile = File(...),
     excel_depara: UploadFile = File(...)
 ):
-    """Lê o PDF original e escreve o Código SOL logo acima do Código Original dentro da mesma célula."""
+    """Lê o PDF original e escreve o Código SOL na frente (no espaço em branco) sem apagar o original."""
     try:
         # 1. Carrega os dados De/Para do Excel
         excel_bytes = await excel_depara.read()
@@ -162,19 +162,11 @@ async def escrever_no_pdf_original(
                         h = word['bottom'] - word['top']
                         y0 = page_height - y_top - h
 
-                        # 1. Apaga a célula do código original para reorganizar o texto em 2 linhas
-                        can.setFillColor(HexColor("#FFFFFF"))
-                        can.rect(x0 - 1, y0 - 1, 80, h + 3, fill=True, stroke=False)
-
-                        # 2. Escreve o CÓDIGO SOL no topo da célula (em Azul Bold)
+                        # POSICIONAMENTO NA FRENTE:
+                        # x0 + 52 desloca o texto para a direita, dentro do espaço em branco da coluna
                         can.setFont("Helvetica-Bold", 6.5)
-                        can.setFillColor(HexColor("#2563eb"))
-                        can.drawString(x0, y0 + 5, cod_sol)
-
-                        # 3. Reescreve o CÓDIGO ORIGINAL logo abaixo (em Preto)
-                        can.setFont("Helvetica", 6)
-                        can.setFillColor(HexColor("#000000"))
-                        can.drawString(x0, y0 - 1, texto)
+                        can.setFillColor(HexColor("#2563eb")) # Azul
+                        can.drawString(x0 + 52, y0 + 1, cod_sol)
 
                 can.save()
                 packet.seek(0)
@@ -192,7 +184,7 @@ async def escrever_no_pdf_original(
         return Response(
             content=output_stream.getvalue(),
             media_type="application/pdf",
-            headers={"Content-Disposition": "inline; filename=Orcamento_SOL_Duplo.pdf"}
+            headers={"Content-Disposition": "inline; filename=Orcamento_SOL.pdf"}
         )
 
     except Exception as e:
