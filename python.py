@@ -107,7 +107,7 @@ async def escrever_no_pdf_original(
     pdf_file: UploadFile = File(...),
     excel_depara: UploadFile = File(...)
 ):
-    """Lê o PDF original e escreve o Código SOL na frente (no espaço em branco) sem apagar o original."""
+    """Lê o PDF original e escreve o Código SOL na frente, sem pontos."""
     try:
         # 1. Carrega os dados De/Para do Excel
         excel_bytes = await excel_depara.read()
@@ -152,20 +152,18 @@ async def escrever_no_pdf_original(
                     texto = word['text']
                     cod_limpo = limpar_codigo(texto)
 
-                    # Identifica os códigos originais na primeira coluna (x0 < 130)
                     if cod_limpo in mapa_sol and len(cod_limpo) >= 4 and word['x0'] < 130:
-                        raw_sol = str(mapa_sol[cod_limpo]).replace(".0", "").strip()
-                        cod_sol = f"{raw_sol[:-1]}.{raw_sol[-1]}" if raw_sol.isdigit() and len(raw_sol) > 1 else raw_sol
+                        # Remove decimais e pontos do código SOL
+                        raw_sol = str(mapa_sol[cod_limpo]).replace(".0", "").replace(".", "").strip()
+                        cod_sol = raw_sol
 
                         x0 = word['x0']
                         y_top = word['top']
                         h = word['bottom'] - word['top']
                         y0 = page_height - y_top - h
 
-                        # POSICIONAMENTO NA FRENTE:
-                        # x0 + 52 desloca o texto para a direita, dentro do espaço em branco da coluna
                         can.setFont("Helvetica-Bold", 6.5)
-                        can.setFillColor(HexColor("#2563eb")) # Azul
+                        can.setFillColor(HexColor("#2563eb"))
                         can.drawString(x0 + 52, y0 + 1, cod_sol)
 
                 can.save()
