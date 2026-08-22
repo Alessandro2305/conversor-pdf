@@ -1,26 +1,39 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "python.py",
       "use": "@vercel/python"
     },
     {
-      "src": "interface.html",
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "python.py"
-    },
-    {
       "src": "/escrever-no-pdf-original/",
       "dest": "python.py"
     },
     {
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
+      "src": "/script.js",
+      "dest": "/script.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "interface.html"
+      "dest": "/interface.html"
     }
   ]
 }
